@@ -8,6 +8,9 @@ GLOBAL_LLM = None
 class LLM:
     def __init__(self, api_key: str = None, base_url: str = None, model: str = None,lang: str = "English"):
         if api_key:
+            masked_key = mask_str(api_key, 4, 4)
+            masked_url = mask_str(base_url, 8, 3)
+            logger.info(f"use api_key = {masked_key}, base_url= {masked_url}")
             self.llm = OpenAI(api_key=api_key, base_url=base_url)
         else:
             self.llm = Llama.from_pretrained(
@@ -37,6 +40,12 @@ class LLM:
             response = self.llm.create_chat_completion(messages=messages,temperature=0)
             return response["choices"][0]["message"]["content"]
 
+def mask_str(s: str, front: int = 3, back: int = 3) -> str:
+    """打码字符串，中间用 * 代替"""
+    if not s:
+        return ""
+    return s[:front] + '*' * 3 + s[-back:]
+    
 def set_global_llm(api_key: str = None, base_url: str = None, model: str = None, lang: str = "English"):
     global GLOBAL_LLM
     GLOBAL_LLM = LLM(api_key=api_key, base_url=base_url, model=model, lang=lang)
