@@ -9,7 +9,7 @@ class LLM:
     def __init__(self, api_key: str = None, base_url: str = None, model: str = None,lang: str = "English"):
         if api_key:
             masked_key = mask_str(api_key, 4, 4)
-            masked_url = mask_str(base_url, 8, 3)
+            masked_url = mask_str(base_url, 15, 3)
             logger.info(f"use api_key = {masked_key}, base_url= {masked_url}")
             self.llm = OpenAI(api_key=api_key, base_url=base_url)
         else:
